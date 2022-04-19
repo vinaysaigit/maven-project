@@ -1,41 +1,17 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    linux:
+      operatingSystem: 'ubuntu-latest'
+    mac:
+      operatingSystem: 'macos-latest'
+    windows:
+      operatingSystem: 'windows-latest'  
 pool:
-  vmImage: 'ubuntu-latest'
-stages:
-- stage: Build
-  jobs:
-    - job: firstjob
-      steps:
-      - bash: echo Build First Job
-    - job: SecondJob
-      steps:
-      - bash: echo Build Second Job
-- stage: DevDeploy
-  variables:
-    environment: Dev
-  dependsOn: Build
-  jobs:
-    - job: DevFist
-      steps:
-      - bash: echo '$(enviroment)DeployJob'
-    - job: DevSeccond
-      steps:
-      - bash: echo Dev Second Job
-- stage: QADeploy
-  variables:
-     environment: 
-  dependsOn: Build
-  jobs:
-    - job: QAJob
-      steps:
-      - bash: echo '$(enviroment)QADeploy'
-- stage: ProdDeploy
-  dependsOn:
-  - DevDeploy
-  - QADeploy
-  jobs:
-    - job: ProductionsJob
-      steps:
-      - bash: echo '$(enviroment)ProdDeploy'
+  vmImage: $(operatingSystem)
+
+steps:
+- script: echo Running on $(operatingSystem)
+  displayName: 'Run a one-line script'
